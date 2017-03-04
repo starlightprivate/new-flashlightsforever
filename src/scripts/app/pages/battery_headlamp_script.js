@@ -1,4 +1,4 @@
-(function () {
+(() => {
   let upsellID = null;
   if (window.location.pathname.indexOf('us_batteryoffer') >= 0) {
     upsellID = 'battery';
@@ -15,26 +15,27 @@
     window.location = 'index.html';
   }
   // Upsell functions
-  function doUpsellYes(upsellID, productId) {
+  function doUpsellYes(sellID, productId) {
     $('div#js-div-loading-bar').show();
     const usParams = {};
+    let productIdForUserParams = {};
     if (MediaStorage.orderId) {
       usParams.orderId = MediaStorage.orderId;
       usParams.productQty = 1;
-      switch (upsellID) {
+      switch (sellID) {
         case 'headlamp':
-          productId = productId || '31';
+          productIdForUserParams = productId || '31';
           break;
         case 'battery':
-          productId = productId || '11';
+          productIdForUserParams = productId || '11';
           break;
         default:
           break;
       }
-      if (productId) {
-        usParams.productId = productId;
+      if (productIdForUserParams) {
+        usParams.productId = productIdForUserParams;
         let nextPage = `receipt.html?orderId=${MediaStorage.orderId}`;
-        if (upsellID === 'battery') {
+        if (sellID === 'battery') {
           nextPage = `us_headlampoffer.html?orderId=${MediaStorage.orderId}`;
         }
         callAPI('upsell', usParams, 'POST', (e) => {
@@ -51,11 +52,14 @@
                 return;
               }
             } else {
-              for (const k in json.message) {
-                if (json.message.hasOwnProperty(k)) {
-                  messageOut += `${k}:${json.message[k]}&lt;br&gt;`;
-                }
-              }
+              // for (const k in json.message) {
+              //   if (json.message.hasOwnProperty(k)) {
+              //     messageOut += `${k}:${json.message[k]}&lt;br&gt;`;
+              //   }
+              // }
+              // Better way
+              const messages = Object.values(json.message).map((k, i) => `${i}:${k}&lt;br&gt;`);
+              messageOut = messages.join('');
             }
             bootstrapModal(messageOut, 'Problem with your Addon');
           }
@@ -67,18 +71,18 @@
       $('div#js-div-loading-bar').hide();
     }
   }
-  function doUpsellNo(upsellID) {
+  function doUpsellNo(sellID) {
     $('div#js-div-loading-bar').show();
     let nextPage = `receipt.html?orderId=${MediaStorage.orderId}`;
-    if (upsellID === 'battery') {
+    if (sellID === 'battery') {
       nextPage = `us_headlampoffer.html?orderId=${MediaStorage.orderId}`;
     }
     window.location = nextPage;
   }
-  $('#upsellNo').click((e) => {
+  $('#upsellNo').click(() => {
     doUpsellNo(upsellID);
   });
-  $('.doupsellyes').click(function (e) {
+  $('.doupsellyes').click(() => {
     doUpsellYes(upsellID, $(this).data('productid'));
   });
-}());
+})();
