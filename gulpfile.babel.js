@@ -37,7 +37,7 @@ var config = {
 };
 
 gulp.task('lint', () => {
-    return gulp.src(['src/scripts/**/*.js','!node_modules/**'])
+    return gulp.src(['src/scripts/app/**/*.js','!node_modules/**'])
         .pipe(eslint({
         rules: {
             'no-evil-regex-rule': 1,
@@ -101,9 +101,16 @@ gulp.task("transpile-and-jscopy", function() {
                    "src/scripts/libs/xss.js" ,
                    "src/scripts/vendor/addclear.js",
                    "src/scripts/vendor/xss.js",
-                   "node_modules/validator/validator.min.js"
                    ])
       .pipe(babel())
+      .pipe(newer(config.dist + "/assets/js"))
+      .pipe(gulp.dest(config.dist + "/assets/js"));
+});
+
+gulp.task("jscopy", function() {
+  return gulp.src([
+                    "node_modules/validator/validator.min.js",
+                   ])
       .pipe(newer(config.dist + "/assets/js"))
       .pipe(gulp.dest(config.dist + "/assets/js"));
 });
@@ -186,6 +193,7 @@ gulp.task("build", ["clean-all"], function(done) {
     "xsslint",
     "libcopy",
     "transpile-and-jscopy",
+    "jscopy",
     "fonts",
     "images",
     "html",
