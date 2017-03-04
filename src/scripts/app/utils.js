@@ -38,7 +38,7 @@ function getJson(e) { // eslint-disable-line no-unused-vars
 function callAPI(endpoint, data, method, callback, err) {
   let params = data;
   let ApiUrl = `/api/v2/${endpoint}/`;
-  httpMethod = method || 'POST';
+  const httpMethod = method || 'POST';
   // if data is an array pass as post,
   // otherwise the string is a simple get and needs to append to the end of the uri
   if (params && params.constructor !== Object) {
@@ -161,7 +161,9 @@ function getQueryVariable(variable) {
   //     return pair[1];
   //   }
   // }
-  forEach(window.location.search.substring(1).split('&'), (value) => {
+  window.location.search.substring(1)
+  .split('&')
+  .forEach((value) => {
     const pair = value.split('=');
     if (pair[0] === variable) {
       console.log('url check-------->', pair);
@@ -174,15 +176,9 @@ function getQueryVariable(variable) {
 }
 
 function afGet(field, qsField) { // eslint-disable-line no-unused-vars
-  const params = {
-    field,
-    qsFiled,
-  };
-
-  params[qsField] = qsField || false;
   let returnThis;
-  if (params[qsField]) {
-    const qParam = getQueryVariable(params[qsField]);
+  if (qsField) {
+    const qParam = getQueryVariable(qsField);
     if (qParam !== '') {
       returnThis = qParam;
     }
@@ -192,6 +188,7 @@ function afGet(field, qsField) { // eslint-disable-line no-unused-vars
   }
   return returnThis;
 }
+
 function getStorageItem(k) { // eslint-disable-line no-unused-vars
   return localStorage.getItem(k);
 }
@@ -249,7 +246,7 @@ function escapeHTML(str) { // eslint-disable-line no-unused-vars
   //     out += params[str][i];
   //   }
   // }
-  forEach(params[str], (value) => {
+  params[str].forEach((value) => {
     if (value === '<') {
       out += '&lt;';
     } else if (value === '>') {
