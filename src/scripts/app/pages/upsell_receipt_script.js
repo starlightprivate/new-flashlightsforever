@@ -20,11 +20,13 @@
     return;
   }
   function populateThanksPage(orderInfos) {
+    let orderInfo = orderInfos;
+
     if ($.type(orderInfos) === 'array') {
-      orderInfos = orderInfos[0];
+      orderInfo = orderInfos[0];
     }
-    $('#orderNumber').text(orderInfos.orderId);
-    callAPI('get-trans', orderInfos.orderId, 'GET', (resp) => {
+    $('#orderNumber').text(orderInfo.orderId);
+    callAPI('get-trans', orderInfo.orderId, 'GET', (resp) => {
       if (resp.success) {
         if (resp.data) {
           const firstRow = resp.data[0];
