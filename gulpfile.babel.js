@@ -4,6 +4,7 @@
 
 var _         = require('lodash'),
   gulp        = require("gulp"),
+  babel       = require("gulp-babel"),
   sass        = require("gulp-sass"),
   cleanCSS    = require("gulp-clean-css"),
   jshint      = require("gulp-jshint"),
@@ -93,7 +94,7 @@ gulp.task("libcopy", function() {
 });
 
 // Copy Custom JS
-gulp.task("jscopy", function() {
+gulp.task("transpile-and-jscopy", function() {
   return gulp.src(["src/scripts/app/pages/*.js",
                    "src/scripts/app/config.js" ,
                    "src/scripts/app/utils.js" ,
@@ -102,6 +103,7 @@ gulp.task("jscopy", function() {
                    "src/scripts/vendor/xss.js",
                    "node_modules/validator/validator.min.js"
                    ])
+      .pipe(babel())
       .pipe(newer(config.dist + "/assets/js"))
       .pipe(gulp.dest(config.dist + "/assets/js"));
 });
@@ -183,7 +185,7 @@ gulp.task("build", ["clean-all"], function(done) {
     // "jshint",
     "xsslint",
     "libcopy",
-    "jscopy",
+    "transpile-and-jscopy",
     "fonts",
     "images",
     "html",
