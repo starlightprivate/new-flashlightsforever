@@ -2,7 +2,7 @@
 
 "use strict";
 
-var _         = require('lodash'), 
+var _         = require('lodash'),
   gulp        = require("gulp"),
   sass        = require("gulp-sass"),
   cleanCSS    = require("gulp-clean-css"),
@@ -51,9 +51,9 @@ gulp.task('lint', () => {
 // Stylish reporter for JSHint
 gulp.task('jshint', () =>
     gulp.src([
-          "src/scripts/app/pages/*.js", 
-           "src/scripts/app/config.js" , 
-           "src/scripts/app/utils.js" , 
+          "src/scripts/app/pages/*.js",
+           "src/scripts/app/config.js" ,
+           "src/scripts/app/utils.js" ,
            "src/scripts/vendor/addclear.js",
         ])
         .pipe(jshint())
@@ -81,23 +81,23 @@ gulp.task("html", function() {
       .pipe(gulp.dest(config.dist));
 });
 
-// Copy JS libraries 
+// Copy JS libraries
 gulp.task("libcopy", function() {
   return gulp.src([
                   "src/scripts/libs/**/*"
-                  ], 
+                  ],
                   { base: "./src/scripts/libs" }
                   )
       .pipe(newer(config.dist + "/assets/libs"))
       .pipe(gulp.dest(config.dist + "/assets/libs"));
 });
 
-// Copy Custom JS 
+// Copy Custom JS
 gulp.task("jscopy", function() {
-  return gulp.src(["src/scripts/app/pages/*.js", 
-                   "src/scripts/app/config.js" , 
-                   "src/scripts/app/utils.js" , 
-                   "src/scripts/libs/xss.js" , 
+  return gulp.src(["src/scripts/app/pages/*.js",
+                   "src/scripts/app/config.js" ,
+                   "src/scripts/app/utils.js" ,
+                   "src/scripts/libs/xss.js" ,
                    "src/scripts/vendor/addclear.js",
                    "src/scripts/vendor/xss.js",
                    "node_modules/validator/validator.min.js"
@@ -106,7 +106,7 @@ gulp.task("jscopy", function() {
       .pipe(gulp.dest(config.dist + "/assets/js"));
 });
 
-// Copy Css 
+// Copy Css
 gulp.task("csscopy", function() {
   return gulp.src(["src/styles/style.css"])
       .pipe(newer(config.dist + "/assets/temp"))
@@ -120,7 +120,7 @@ gulp.task("clean-all", function() {
     config.dist
   ]);
 });
- 
+
 // Strip comments from CSS using strip-css-comments
 gulp.task("stripcss", function () {
     return gulp.src(config.dist + "/assets/temp/style.css")
@@ -128,7 +128,7 @@ gulp.task("stripcss", function () {
         .pipe(gulp.dest(config.dist + "/assets/temp/"));
 });
 
-// Remove unnecessary css 
+// Remove unnecessary css
 gulp.task("csspurify", function() {
   return gulp.src(config.dist + "/assets/temp/style.css")
     .pipe(purify(
@@ -180,7 +180,7 @@ gulp.task("xsslint", function() {
 // Build Task !
 gulp.task("build", ["clean-all"], function(done) {
   runSequence(
-    "jshint",
+    // "jshint",
     "xsslint",
     "libcopy",
     "jscopy",
