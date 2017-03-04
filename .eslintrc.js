@@ -4,6 +4,7 @@ module.exports = {
         "import"
     ],
     "rules": {
-      "no-undef": "off"
+      "no-undef": "off",
+      "no-console": "off"
     }
 };

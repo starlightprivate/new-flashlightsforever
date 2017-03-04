@@ -1,4 +1,4 @@
-(function () {
+(() => {
   if (customWrapperForIsMobileDevice()) {
     $('#checkout-wrapper').addClass('mobile-mode');
     $('#step-4 .step-title span').html('Step #2 :');
@@ -8,14 +8,14 @@
 
   $('input[name=cardNumber]').attr('maxlength', '19');
 
-  function submitOrderForm(orderForm) {
+  function submitOrderForm() {
     $('div#js-div-loading-bar').show();
-    let year = $('select[name=year]').val(),
-      month = $('select[name=month]').val();
+    const year = $('select[name=year]').val();
+    const month = $('select[name=month]').val();
     const d = new Date();
-    let currentYear = d.getFullYear().toString().substr(2, 2),
-      currentMonth = (`0${d.getMonth() + 1}`).slice(-2);
-    if (!(currentYear < year || currentYear === year && currentMonth <= month)) {
+    const currentYear = d.getFullYear().toString().substr(2, 2);
+    const currentMonth = (`0${d.getMonth() + 1}`).slice(-2);
+    if (!(currentYear < year || (currentYear === year && currentMonth <= month))) {
       $('div#js-div-loading-bar').hide();
       bootstrapModal('Invalid Expiration Date', 'Problem with your order');
       return;
@@ -37,19 +37,31 @@
       'productId',
     ];
     const orderDetails = {};
-    for (let index = 0; index < apiFields.length; index++) {
-      const key = apiFields[index];
-      var uVal,
-        dirty;
+    // for (let index = 0; index < apiFields.length; index++) {
+    //   const key = apiFields[index];
+    //   var uVal,
+    //     dirty;
+    //   if (key !== 'productId') {
+    //     dirty = $(`[name=${key}]`).val();
+    //   } else {
+    //     dirty = $('input[name=\'productId\']:checked', '#checkoutForm').val();
+    //   }
+    //   uVal = filterXSS(dirty);
+    //   orderDetails[key] = uVal;
+    // }
+        // if(evil) return;
+    apiFields.forEach((key) => {
+      // const key = apiFields[index];
+      let dirty;
       if (key !== 'productId') {
         dirty = $(`[name=${key}]`).val();
       } else {
         dirty = $('input[name=\'productId\']:checked', '#checkoutForm').val();
       }
-      uVal = filterXSS(dirty);
+      const uVal = filterXSS(dirty);
       orderDetails[key] = uVal;
-    }
-        // if(evil) return;
+    });
+
 
     orderDetails.cardMonth = $('[name=month]').val();
     orderDetails.cardYear = $('[name=year]').val();
@@ -77,24 +89,29 @@
             console.log('Your browser does not support local storage.');
           }
         }
-                // window.location = GlobalConfig.BasePagePath + "us_batteryoffer.html?orderId=" + MediaStorage.orderId + "&pId=" + orderDetails.productId;
+        // window.location = GlobalConfig.BasePagePath + "us_batteryoffer.html?orderId="
+        // + MediaStorage.orderId + "&pId=" + orderDetails.productId;
         window.location = `us_batteryoffer.html?orderId=${MediaStorage.orderId}&pId=${orderDetails.productId}`;
       } else {
         $('#checkoutForm .btn-complete').removeClass('pulse');
-        if (resp.message) {
+        let responseMessage = resp.message;
+        if (responseMessage) {
           let errHead = 'Problem with your order';
           let errBody;
-          if (resp.message !== 'Invalid Credit Card Number') {
+          if (responseMessage !== 'Invalid Credit Card Number') {
             errHead = 'Payment validation failed:  Processor Declined.';
-            resp.message += '<br><br>For security reasons, you must re-enter a new card number.<br><br>' + 'Tip: you may try another card or call <a href=\'tel:+18558807233\'>(855) 880-7233</a>.';
+            responseMessage += '<br><br>For security reasons, you must re-enter a new card number.<br><br>';
+            responseMessage += 'Tip: you may try another card or call <a href=\'tel:+18558807233\'>(855) 880-7233</a>.';
           }
-          errBody = `<span style='font-size:20px'>${resp.message}<span>`;
+          errBody = '<span style=\'font-size:20px\'>';
+          errBody += responseMessage;
+          errBody += '<span>';
           bootstrapModal(errBody, errHead);
         }
       }
       $('div#js-div-loading-bar').hide();
     });
-    return false;
+    return false; // eslint-disable-line consistent-return
   }
     // Checkout Form Validator
   let CheckoutFieldsReq;
@@ -120,17 +137,17 @@
     ];
   }
 
-  function checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount) {
-    let cfCount = CheckoutFieldsReq.length,
-      icfCount = 1;
+  function checkoutButtonPulse(CheckoutFields, invalidFieldsCount) {
+    const cfCount = CheckoutFields.length;
+    let icfCount = 1;
     if (customWrapperForIsMobileDevice()) {
       icfCount = 0;
     }
-    for (let i = 0; i < CheckoutFieldsReq.length; i++) {
-      if ($(`[name='${CheckoutFieldsReq[i]}'].required`).parents('.form-group').hasClass('has-success')) {
-        icfCount++;
-      }
-    }
+
+    CheckoutFields.forEach((field) => {
+      if ($(`[name='${field}'].required`).parents('.form-group').hasClass('has-success')) { icfCount += 1; }
+    });
+
     if (invalidFieldsCount === 0) {
       if ($('#checkoutForm .fv-has-feedback.has-warning').length > 0) {
         $('#checkoutForm .btn-complete').removeClass('pulse');
@@ -145,13 +162,17 @@
   }
   if ($('#checkoutForm').length > 0) {
     $('#checkoutForm').on('init.field.fv', (e, data) => {
-      let field = data.field,
-        $field = data.element,
-        bv = data.fv;
+      const field = data.field;
+      const $field = data.element;
+      const bv = data.fv;
             // FormValidation instance
             // Create a span element to show valid message
             // and place it right before the field
-      const $span = $('<small/>').addClass('help-block validMessage text-success').attr('data-field', field).insertAfter($field).hide();
+      const $span = $('<small/>')
+                    .addClass('help-block validMessage text-success')
+                    .attr('data-field', field)
+                    .insertAfter($field)
+                    .hide();
             // Retrieve the valid message via getOptions()
       const message = bv.getOptions(field).validMessage;
       if (message) {
@@ -236,28 +257,28 @@
             notEmpty: { message: 'Enter the card number.' },
             creditCard: {
               message: 'Enter a valid card number.',
-                            // This will allow to Accept test credit card numbers
-              transformer($field, validatorName, validator) {
+              // This will allow to Accept test credit card numbers
+              transformer($field) {
                 const TEST_CARD_NUMBERS = [
                   '0000 0000 0000 0000',
                   '3333 2222 3333 2222',
                   '3003 0008 4444 44'];
-                                // We will transform those test card numbers into a valid one as below
+                // We will transform those test card numbers into a valid one as below
                 const VALID_CARD_NUMBER = '4444111144441111';
 
-                                // Get the number pr by user
+                // Get the number pr by user
                 let value = $field.val();
-                const CountOfChars = parseInt($field.val().length);
+                const CountOfChars = parseInt($field.val().length, 10);
                 if (CountOfChars === 17) {
                   value = value.substr(0, CountOfChars - 1);
                 }
 
-                                // Check if it"s one of test card numbers
+                // Check if it"s one of test card numbers
                 if (value !== '' && $.inArray(value, TEST_CARD_NUMBERS) !== -1) {
-                                    // then turn it to be a valid one defined by VALID_CARD_NUMBER
+                  // then turn it to be a valid one defined by VALID_CARD_NUMBER
                   return VALID_CARD_NUMBER;
                 }
-                                    // Otherwise, just return the initial value
+                  // Otherwise, just return the initial value
                 return value;
               },
             },
@@ -273,28 +294,59 @@
               callback(value, validator, $field) {
                 const form = $field.parents('form');
                 const currentDate = new Date();
-                const year = parseInt(currentDate.getYear());
-                const yearVal = parseInt(form.find('[name=year]').val());
+                const year = parseInt(currentDate.getYear(), 10);
+                const yearVal = parseInt(form.find('[name=year]').val(), 10);
                 if (isNaN(yearVal) || yearVal === null || yearVal === undefined) {
                   return true;
                 }
-                const selectedYear = 100 + (parseInt(form.find('[name=year]').val()) || 0);
-                const currentMonth = parseInt(value) - 1 >= parseInt(currentDate.getMonth());
+                const selectedYear = 100 + (parseInt(form.find('[name=year]').val(), 10) || 0);
+                const currentMonth = parseInt(value, 10) -
+                                     1 >= parseInt(currentDate.getMonth(), 10);
                 if (selectedYear === year) {
                   if (currentMonth) {
-                    form.find('[name=year]').parents('.form-group').removeClass('has-warning').addClass('has-success');
-                    form.find('[name=year]').parents('.form-group').find('.fv-control-feedback').removeClass('fa-remove').addClass('fa-check');
-                    form.find('[name=year]').parents('.form-group').find('.form-control-feedback').hide();
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .removeClass('has-warning')
+                        .addClass('has-success');
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .find('.fv-control-feedback')
+                        .removeClass('fa-remove')
+                        .addClass('fa-check');
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .find('.form-control-feedback')
+                        .hide();
                   } else {
-                    form.find('[name=year]').parents('.form-group').removeClass('has-success').addClass('has-warning');
-                    form.find('[name=year]').parents('.form-group').find('.fv-control-feedback').removeClass('fa-check').addClass('fa-remove');
-                    form.find('[name=year]').parents('.form-group').find('[data-fv-validator=\'callback\']').show();
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .removeClass('has-success')
+                        .addClass('has-warning');
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .find('.fv-control-feedback')
+                        .removeClass('fa-check')
+                        .addClass('fa-remove');
+                    form.find('[name=year]')
+                        .parents('.form-group')
+                        .find('[data-fv-validator=\'callback\']')
+                        .show();
                   }
                   return currentMonth;
                 }
-                form.find('[name=year]').parents('.form-group').removeClass('has-warning').addClass('has-success');
-                form.find('[name=year]').parents('.form-group').find('.fv-control-feedback').removeClass('fa-remove').addClass('fa-check');
-                form.find('[name=year]').parents('.form-group').find('.form-control-feedback').hide();
+                form.find('[name=year]')
+                    .parents('.form-group')
+                    .removeClass('has-warning')
+                    .addClass('has-success');
+                form.find('[name=year]')
+                    .parents('.form-group')
+                    .find('.fv-control-feedback')
+                    .removeClass('fa-remove')
+                    .addClass('fa-check');
+                form.find('[name=year]')
+                    .parents('.form-group')
+                    .find('.form-control-feedback')
+                    .hide();
                 return true;
               },
             },
@@ -306,9 +358,10 @@
             callback: {
               message: 'Please set year more or equal current.',
               callback(value, validator, $field) {
-                const form = $field.parents('form');
+                const form = $field.parents('form'); // eslint-disable-line no-unused-vars
                 const currentDate = new Date();
-                const yearCondition = 100 + parseInt(value) >= parseInt(currentDate.getYear());
+                const yearCondition = 100 +
+                                       parseInt(value, 10) >= parseInt(currentDate.getYear(), 10);
                 $('#checkoutForm').formValidation('revalidateField', 'month');
                 if ($('#checkoutForm').find('[name=month]').parents('.form-group').hasClass('has-warning')) {
                   return false;
@@ -324,26 +377,45 @@
         if (data.validator === 'creditCard') {
           switch (data.result.type) {
             case 'VISA':
-              $('.payment-icon .cc-icon.cc-visa').parents('a').siblings().find('.cc-icon').removeClass('active').addClass('inactive');
-              $('.payment-icon .cc-icon.cc-visa').removeClass('inactive').addClass('active');
+              $('.payment-icon .cc-icon.cc-visa').parents('a')
+                                                 .siblings()
+                                                 .find('.cc-icon')
+                                                 .removeClass('active')
+                                                 .addClass('inactive');
+              $('.payment-icon .cc-icon.cc-visa').removeClass('inactive')
+                                                 .addClass('active');
               $('.payment-icon .cc-icon.cc-visa').removeClass('faded');
               $('input[name=cardNumber]').attr('maxlength', '19');
               break;
             case 'MASTERCARD':
-              $('.payment-icon .cc-icon.cc-mastercard').parents('a').siblings().find('.cc-icon').removeClass('active').addClass('inactive');
-              $('.payment-icon .cc-icon.cc-mastercard').removeClass('inactive').addClass('active');
+              $('.payment-icon .cc-icon.cc-mastercard').parents('a')
+                                                       .siblings()
+                                                       .find('.cc-icon')
+                                                       .removeClass('active')
+                                                       .addClass('inactive');
+              $('.payment-icon .cc-icon.cc-mastercard').removeClass('inactive')
+                                                       .addClass('active');
               $('.payment-icon .cc-icon.cc-mastercard').removeClass('faded');
               $('input[name=cardNumber]').attr('maxlength', '19');
               break;
             case 'AMERICAN_EXPRESS':
-              $('.payment-icon .cc-icon.cc-american-express').parents('a').siblings().find('.cc-icon').removeClass('active').addClass('inactive');
+              $('.payment-icon .cc-icon.cc-american-express').parents('a')
+                                                             .siblings()
+                                                             .find('.cc-icon')
+                                                             .removeClass('active')
+                                                             .addClass('inactive');
               $('.payment-icon .cc-icon.cc-american-express').removeClass('inactive').addClass('active');
               $('.payment-icon .cc-icon.cc-american-express').removeClass('faded');
               $('input[name=cardNumber]').attr('maxlength', '18');
               break;
             case 'DISCOVER':
-              $('.payment-icon .cc-icon.cc-discover').parents('a').siblings().find('.cc-icon').removeClass('active').addClass('inactive');
-              $('.payment-icon .cc-icon.cc-discover').removeClass('inactive').addClass('active');
+              $('.payment-icon .cc-icon.cc-discover').parents('a')
+                                                     .siblings()
+                                                     .find('.cc-icon')
+                                                     .removeClass('active')
+                                                     .addClass('inactive');
+              $('.payment-icon .cc-icon.cc-discover').removeClass('inactive')
+                                                     .addClass('active');
               $('.payment-icon .cc-icon.cc-discover').removeClass('faded');
               $('input[name=cardNumber]').attr('maxlength', '19');
               break;
@@ -359,17 +431,20 @@
           $('input[name=cardNumber]').attr('maxlength', '19');
         }
       }
-    }).on('err.field.fv', (e, data) => {
-      let field = data.field,
-        $field = data.element;
+    })
+    .on('err.field.fv', (e, data) => {
+      const field = data.field;
+      const $field = data.element;
       $field.next(`.validMessage[data-field='${field}']`).hide();
       const invalidFieldsCount = data.fv.getInvalidFields().length;
       checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount);
-    }).on('status.field.fv', (e, data) => {
+    })
+    .on('status.field.fv', (e, data) => {
       data.fv.disableSubmitButtons(false);
-    }).on('success.field.fv', (e, data) => {
-      let field = data.field,
-        $field = data.element;
+    })
+    .on('success.field.fv', (e, data) => {
+      const field = data.field;
+      const $field = data.element;
       if (data.fv.getSubmitButton()) {
         data.fv.disableSubmitButtons(false);
       }
@@ -377,8 +452,10 @@
       $field.next(`.validMessage[data-field='${field}']`).show();
       const invalidFieldsCount = data.fv.getInvalidFields().length;
       checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount);
-    }).on('err.form.fv', (e) => {}).on('success.form.fv', (e) => {
-      submitOrderForm('#checkoutForm');
+    })
+    .on('err.form.fv', () => {})
+    .on('success.form.fv', (e) => {
+      submitOrderForm();
       e.preventDefault();
     });
     $('#checkoutForm').submit((e) => {
@@ -413,7 +490,7 @@
       }
     });
         // Save Checkout Page details to DB engine
-    const saveToMediaStorage = function () {
+    const saveToMediaStorage = () => {
       $.each(checkoutFields, (index, value) => {
         if (value !== 'cardNumber' && value !== 'year' && value !== 'month') {
           if ($(`[name=${value}]`).length > 0) {
@@ -430,4 +507,4 @@
     $('form').on('change', saveToMediaStorage);
     window.onbeforeunload = saveToMediaStorage;
   }
-}());
+})();
