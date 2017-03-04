@@ -36,47 +36,38 @@ function getJson(e) { // eslint-disable-line no-unused-vars
 
 // call API
 function callAPI(endpoint, data, method, callback, err) {
+  let params = data;
   let ApiUrl = `/api/v2/${endpoint}/`;
-  const params = {
-    endpoint,
-    data,
-    method,
-    callback,
-    err,
-  };
-
-  params[method] = method || 'POST';
+  httpMethod = method || 'POST';
   // if data is an array pass as post,
   // otherwise the string is a simple get and needs to append to the end of the uri
-  if (data && data.constructor !== Object) {
-    ApiUrl += data;
-    params[data] = null;
+  if (params && params.constructor !== Object) {
+    ApiUrl += params;
+    params = null;
   }
 
   // https://starlightgroup.atlassian.net/browse/SG-14
   if (['PUT', 'POST', 'PATCH', 'DELETE'].indexOf(method) !== -1) {
-    /* eslint-disable no-underscore-dangle */
-    params[data]._csrf = $.cookie('XSRF-TOKEN');
-    console.log(`COOKIE(token): ${params[data]._csrf}`);
-    /* eslint-enable no-underscore-dangle */
+    params._csrf = $.cookie('XSRF-TOKEN'); // eslint-disable-line no-underscore-dangle
+    console.log(`COOKIE(token): ${params._csrf}`); // eslint-disable-line no-underscore-dangle
   } else {
     console.log('COOKIE(token): -');
   }
 
   jQuery.ajax({
-    method: params[method],
+    method: httpMethod,
     url: ApiUrl,
-    data: params[data],
+    data: params,
     beforeSend(xhr) { xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); },
   }).done((msg) => {
-    if (typeof params[callback] === 'function') {
-      params[callback](msg);
+    if (typeof callback === 'function') {
+      callback(msg);
     }
   }).fail((jqXHR, textStatus) => {
-    if (typeof params[err] === 'function') {
-      params[err](textStatus);
+    if (typeof err === 'function') {
+      err(textStatus);
     }
-    console.log(`error occured on api - ${params[endpoint]}`);
+    console.log(`error occured on api - ${endpoint}`);
     console.log(`error11 - ${textStatus}`);
   });
 }
