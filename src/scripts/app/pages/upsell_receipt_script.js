@@ -1,4 +1,4 @@
-(function () {
+(() => {
   let pageType = null;
   if (window.location.pathname.indexOf('receipt') >= 0) {
     pageType = 'receipt';
@@ -67,4 +67,4 @@
       }
     }
   });
-}());
+})();

@@ -1,29 +1,34 @@
-function init_field_fv(e, data) {
-  let field = data.field,
-    $field = data.element,
-    bv = data.fv;
+function initFieldFv(e, data) {
+  const field = data.field;
+  const $field = data.element;
+  const bv = data.fv;
 
-  const $span = $('<small/>').addClass('help-block validMessage text-success').attr('data-field', field).insertAfter($field).hide();
+  const $span =
+   $('<small/>')
+    .addClass('help-block validMessage text-success')
+    .attr('data-field', field)
+    .insertAfter($field)
+    .hide();
   // Retrieve the valid message via getOptions()
   const message = bv.getOptions(field).validMessage;
   if (message) {
     $span.text(message);
   }
 }
-function success_field_fv(e, data) {
-  let field = data.field,
-    $field = data.element;
+function successFieldFv(e, data) {
+  const field = data.field;
+  const $field = data.element;
   $field.next(`.validMessage[data-field='${field}']`).show();
 }
-function err_field_fv(e, data) {
-  let field = data.field,
-    $field = data.element;
+function errFieldFv(e, data) {
+  const field = data.field;
+  const $field = data.element;
   $field.next(`.validMessage[data-field='${field}']`).hide();
 }
-function wistiaVideo() {
+function wistiaVideo() {  // eslint-disable-line no-unused-vars
   $('.btn-buy-modal').click();
 }
-(function () {
+(() => {
   $('input[name=phoneNumber]').mask('000-000-0000', { translation: { 0: { pattern: /[0-9*]/ } } });
   const MediaStorage = {};
   // Lead create/update
@@ -67,9 +72,7 @@ function wistiaVideo() {
     callAPI('create-lead', crmLead, 'POST', (e) => {
       console.log(e);
       cb();
-    }, (textStatus) => {
-
-    });
+    }, () => {});
   }
   // Forms submit
   const submittedContactForm = false;
@@ -110,27 +113,27 @@ function wistiaVideo() {
     if (customWrapperForIsMobileDevice()) {
       callAPI('add-contact', data, 'POST', (response) => {
         if (response.success) {
-          createLead(data, (success) => {
+          createLead(data, () => {
             $('.btn-address-modal').click();
-          }, (textStatus) => {});
+          }, () => {});
         }
-      }, (textStatus) => {});
+      }, () => {});
       $('#modal-contact .close-modal').click();
     } else {
       $('div#js-div-loading-bar').show();
 
       callAPI('add-contact', data, 'POST', (response) => {
         if (response.success) {
-          createLead(data, (success) => {
+          createLead(data, () => {
             // In case of Mobile devices, show address modal and go to checkout page.
             window.location = 'checkout.html';
-          }, (textStatus) => {
+          }, () => {
             $('div#js-div-loading-bar').hide();
           });
         } else {
           $('div#js-div-loading-bar').hide();
         }
-      }, (textStatus) => {
+      }, () => {
         $('div#js-div-loading-bar').hide();
       });
     }
@@ -144,8 +147,7 @@ function wistiaVideo() {
       'postalCode',
     ];
     const tmp = {};
-    for (let index = 0; index < addressFormFields.length; index++) {
-      const value = addressFormFields[index];
+    addressFormFields.forEach((value) => {
       if ($(`[name=${value}]`).length > 0) {
         const dirty = $(`[name=${value}]`).val();
         const uVal = filterXSS(dirty);
@@ -156,7 +158,7 @@ function wistiaVideo() {
         }
         tmp[value] = uVal;
       }
-    }
+    });
     // if(evil) return;
     updateLead(tmp, () => {
       window.location = 'checkout.html';
@@ -164,7 +166,7 @@ function wistiaVideo() {
   }
 
   if ($('#form-contact').length > 0) {
-    $('#form-contact').on('init.field.fv', init_field_fv).formValidation({
+    $('#form-contact').on('init.field.fv', initFieldFv).formValidation({
       framework: 'bootstrap4',
       icon: {
         valid: 'ss-check',
@@ -206,20 +208,23 @@ function wistiaVideo() {
           },
         },
       },
-    }).on('err.field.fv', (e, data) => {
-    }).on('success.validator.fv', (e, data) => {
-    }).on('err.form.fv', (e, data) => {
-    }).on('success.form.fv', (e, data) => {
+    })
+    .on('err.field.fv', () => {})
+    .on('success.validator.fv', () => {})
+    .on('err.form.fv', () => {})
+    .on('success.form.fv', (e) => {
       submitContactForm();
       e.preventDefault();
-    }).on('success.field.fv', success_field_fv).on('err.field.fv', err_field_fv);
+    })
+    .on('success.field.fv', successFieldFv)
+    .on('err.field.fv', errFieldFv);
     $('#form-contact').submit((e) => {
       e.preventDefault();
     });
   }
   // Address Form Validator
   if ($('#form-address').length > 0) {
-    $('#form-address').on('init.field.fv', init_field_fv).formValidation({
+    $('#form-address').on('init.field.fv', initFieldFv).formValidation({
       framework: 'bootstrap4',
       icon: {
         valid: 'ss-check',
@@ -260,14 +265,17 @@ function wistiaVideo() {
           },
         },
       },
-    }).on('err.field.fv', (e, data) => {
-    }).on('success.validator.fv', (e, data) => {
-    }).on('err.form.fv', (e, data) => {
-    }).on('success.form.fv', (e, data) => {
+    })
+    .on('err.field.fv', () => {})
+    .on('success.validator.fv', () => {})
+    .on('err.form.fv', () => {})
+    .on('success.form.fv', (e) => {
       console.log('submit!!!!!!');
       submitAddressForm();
       e.preventDefault();
-    }).on('success.field.fv', success_field_fv).on('err.field.fv', err_field_fv);
+    })
+    .on('success.field.fv', successFieldFv)
+    .on('err.field.fv', errFieldFv);
     $('#form-address').submit((e) => {
       e.preventDefault();
     });
@@ -278,8 +286,7 @@ function wistiaVideo() {
   });
 
   if ($('#modal-contact').length > 0) {
-    $('#modal-contact').on('shown.bs.modal', (event) => {
-    });
+    $('#modal-contact').on('shown.bs.modal', () => {});
   }
   // Once submitted contact form and click on the green button again show address modal
   $('.btn-buy-modal').click((e) => {
@@ -288,5 +295,5 @@ function wistiaVideo() {
       e.stopPropagation();
     }
   });
-}());
+})();
 

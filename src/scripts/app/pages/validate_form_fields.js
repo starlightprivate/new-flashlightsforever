@@ -1,4 +1,4 @@
-(function () {
+(() => {
   let tmpZipCode = '';
   /* eslint-disable no-unused-vars */
   function validateFields(frm, fields) {
@@ -28,4 +28,4 @@
       });
     }
   }
-}());
+})();
