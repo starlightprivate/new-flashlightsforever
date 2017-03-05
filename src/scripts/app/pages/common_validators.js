@@ -115,7 +115,7 @@ function validate() {
       topLevelDomains,
       suggested(element, suggestion) {
         $('#email + small').show();
-        $('#email + small').html(`Did you mean <a href='javascript:void(0)'>${suggestion.full}</a>`);
+        $('#email + small').html('Did you mean <a href=\'javascript:void(0)\'>' + filterXSS(suggestion.full) + '</a>');
       },
       empty() {
         // console.log("suggestion ", "No suggestion");
