@@ -48,11 +48,7 @@ function wistiaVideo() {  // eslint-disable-line no-unused-vars
       if (resp.success) {
         if (resp.orderId) {
           MediaStorage.orderId = resp.orderId;
-          try {
-            localStorage.setItem('orderId', resp.orderId);
-          } catch (e) {
-            console.log('Your browser does not support local storage.');
-          }
+          UniversalStorage.saveOrderId(resp.orderId);
         }
       }
       callback(resp.success);
@@ -89,26 +85,10 @@ function wistiaVideo() {  // eslint-disable-line no-unused-vars
     data.MobilePhone = filterXSS(tempData.MobilePhone);
     data.LastName = 'NA';
 
-    try {
-      localStorage.setItem('firstName', data.FirstName);
-    } catch (e) {
-      console.log('Your browser does not support local storage.');
-    }
-    try {
-      localStorage.setItem('lastName', data.LastName);
-    } catch (e) {
-      console.log('Your browser does not support local storage.');
-    }
-    try {
-      localStorage.setItem('emailAddress', data.Email);
-    } catch (e) {
-      console.log('Your browser does not support local storage.');
-    }
-    try {
-      localStorage.setItem('phoneNumber', data.MobilePhone);
-    } catch (e) {
-      console.log('Your browser does not support local storage.');
-    }
+    UniversalStorage.saveCheckoutField('firstName', data.FirstName);
+    UniversalStorage.saveCheckoutField('lastName', data.LastName);
+    UniversalStorage.saveCheckoutField('emailAddress', data.Email);
+    UniversalStorage.saveCheckoutField('phoneNumber', data.MobilePhone);
 
     if (customWrapperForIsMobileDevice()) {
       callAPI('add-contact', data, 'POST', (response) => {
@@ -151,11 +131,7 @@ function wistiaVideo() {  // eslint-disable-line no-unused-vars
       if ($(`[name=${value}]`).length > 0) {
         const dirty = $(`[name=${value}]`).val();
         const uVal = filterXSS(dirty);
-        try {
-          localStorage.setItem(value, uVal);
-        } catch (e) {
-          console.log('Your browser does not support local storage.');
-        }
+        UniversalStorage.saveCheckoutField(value, uVal);
         tmp[value] = uVal;
       }
     });
@@ -296,4 +272,3 @@ function wistiaVideo() {  // eslint-disable-line no-unused-vars
     }
   });
 })();
-

@@ -4,7 +4,7 @@
     $('#step-4 .step-title span').html('Step #2 :');
   }
   $('input[name=phoneNumber]').mask('000-000-0000', { translation: { 0: { pattern: /[0-9*]/ } } });
-  const MediaStorage = getOrderData();
+  const MediaStorage = UniversalStorage.getCheckoutDetails();
 
   $('input[name=cardNumber]').attr('maxlength', '19');
 
@@ -37,19 +37,6 @@
       'productId',
     ];
     const orderDetails = {};
-    // for (let index = 0; index < apiFields.length; index++) {
-    //   const key = apiFields[index];
-    //   var uVal,
-    //     dirty;
-    //   if (key !== 'productId') {
-    //     dirty = $(`[name=${key}]`).val();
-    //   } else {
-    //     dirty = $('input[name=\'productId\']:checked', '#checkoutForm').val();
-    //   }
-    //   uVal = filterXSS(dirty);
-    //   orderDetails[key] = uVal;
-    // }
-        // if(evil) return;
     apiFields.forEach((key) => {
       // const key = apiFields[index];
       let dirty;
@@ -61,7 +48,6 @@
       const uVal = filterXSS(dirty);
       orderDetails[key] = uVal;
     });
-
 
     orderDetails.cardMonth = $('[name=month]').val();
     orderDetails.cardYear = $('[name=year]').val();
@@ -83,11 +69,7 @@
       if (resp.success) {
         $('#checkoutForm .btn-complete').removeClass('pulse');
         if (resp.orderId) {
-          try {
-            localStorage.setItem('orderId', resp.orderId);
-          } catch (e) {
-            console.log('Your browser does not support local storage.');
-          }
+          UniversalStorage.saveOrderId(resp.orderId);
         }
         // window.location = GlobalConfig.BasePagePath + "us_batteryoffer.html?orderId="
         // + MediaStorage.orderId + "&pId=" + orderDetails.productId;
@@ -448,7 +430,8 @@
       if (data.fv.getSubmitButton()) {
         data.fv.disableSubmitButtons(false);
       }
-            // Show the valid message element
+
+      // Show the valid message element
       $field.next(`.validMessage[data-field='${field}']`).show();
       const invalidFieldsCount = data.fv.getInvalidFields().length;
       checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount);
@@ -461,7 +444,8 @@
     $('#checkoutForm').submit((e) => {
       e.preventDefault();
     });
-        //  Apply mask for checkout fields
+
+    //  Apply mask for checkout fields
     $('input[name=cardNumber]').mask('0000 0000 0000 0000', { translation: { 0: { pattern: /[0-9]/ } } });
     $('input[name=postalCode]').mask('00000', { translation: { 0: { pattern: /[0-9]/ } } });
     const checkoutFields = [
@@ -473,11 +457,8 @@
       'city',
       'state',
       'postalCode',
-      'cardNumber',
-      'month',
-      'year',
     ];
-        // Load cached values
+    // Load cached values
     $.each(checkoutFields, (index, value) => {
       if ($(`[name=${value}]`).length === 0) {
         return;
@@ -489,22 +470,17 @@
         $('#checkoutForm').formValidation('revalidateField', value);
       }
     });
-        // Save Checkout Page details to DB engine
-    const saveToMediaStorage = () => {
-      $.each(checkoutFields, (index, value) => {
-        if (value !== 'cardNumber' && value !== 'year' && value !== 'month') {
-          if ($(`[name=${value}]`).length > 0) {
-            const uVal = $(`[name=${value}]`).val();
-            try {
-              localStorage.setItem(value, uVal);
-            } catch (e) {
-              console.log('Your browser does not support local storage.');
-            }
-          }
-        }
+
+    // Save checkout details to storage.
+    const saveToStorage = () => {
+      const checkoutDetails = {};
+      checkoutFields.forEach((field) => {
+        checkoutDetails[field] = $(`[name=${field}]`).val();
       });
+      UniversalStorage.saveCheckoutDetails(checkoutDetails);
     };
-    $('form').on('change', saveToMediaStorage);
-    window.onbeforeunload = saveToMediaStorage;
+
+    $('form').on('change', saveToStorage);
+    window.onbeforeunload = saveToStorage;
   }
 })();

@@ -189,43 +189,6 @@ function afGet(field, qsField) { // eslint-disable-line no-unused-vars
   return returnThis;
 }
 
-function getStorageItem(k) { // eslint-disable-line no-unused-vars
-  return localStorage.getItem(k);
-}
-
-function getOrderData() { // eslint-disable-line no-unused-vars
-  const keys = [
-    'orderId',
-    'firstName',
-    'lastName',
-    'emailAddress',
-    'phoneNumber',
-    'address1',
-    'city',
-    'state',
-    'postalCode',
-    'cardNumber',
-    'cardSecurityCode',
-    'cardMonth',
-    'cardYear',
-    'productId',
-  ];
-  const obj = {};
-  // for (const k in keys) {
-  //   if (keys.hasOwnProperty(k)) {
-  //     obj[keys[k]] = getStorageItem(keys[k]) || '';
-  //   }
-  // }
-
-  Object.values(keys).forEach((value) => { obj[value] = getStorageItem(value) || ''; });
-
-  return obj;
-}
-
-function clearStorageItem(k) { // eslint-disable-line no-unused-vars
-  localStorage.removeItem(k);
-}
-
 function escapeHTML(str) { // eslint-disable-line no-unused-vars
   const params = {
     str,
@@ -233,19 +196,6 @@ function escapeHTML(str) { // eslint-disable-line no-unused-vars
 
   params[str] = `${params[str]}`;
   let out = '';
-  // for (let i = 0; i < params[str].length; i + 1) {
-  //   if (params[str][i] === '<') {
-  //     out += '&lt;';
-  //   } else if (params[str][i] === '>') {
-  //     out += '&gt;';
-  //   } else if (params[str][i] === "'") {
-  //     out += '&#39;';
-  //   } else if (params[str][i] === '"') {
-  //     out += '&quot;';
-  //   } else {
-  //     out += params[str][i];
-  //   }
-  // }
   params[str].forEach((value) => {
     if (value === '<') {
       out += '&lt;';
