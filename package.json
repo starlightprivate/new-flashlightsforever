@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "gulp-eslint": "^3.0.1",
-    "jshint-stylish": "^2.2.1",
     "lodash": "^4.17.4",
     "safe-regex": "^1.1.0",
     "validator": "^7.0",
@@ -33,7 +32,6 @@
     "gulp-cache": "^0.4.5",
     "gulp-clean-css": "^3.0.2",
     "gulp-concat": "^2.6.0",
-    "gulp-jshint": "^2.0.1",
     "gulp-newer": "^1.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-purifycss": "^0.2.0",
@@ -42,7 +40,6 @@
     "gulp-size": "^2.1.0",
     "gulp-strip-css-comments": "^1.2.0",
     "gulp-uglify": "^2.0.0",
-    "jshint": "^2.9.4",
     "run-sequence": "^1.2.2",
     "serve-static": "^1.11.2",
     "xsslint": "^0.1.3"
