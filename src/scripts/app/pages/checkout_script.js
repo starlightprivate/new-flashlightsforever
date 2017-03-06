@@ -73,7 +73,7 @@
         }
         // window.location = GlobalConfig.BasePagePath + "us_batteryoffer.html?orderId="
         // + MediaStorage.orderId + "&pId=" + orderDetails.productId;
-        window.location = 'us_batteryoffer.html?orderId=' + filterXSS(MediaStorage.orderId) + '&pId=' + filterXSS(orderDetails.productId);
+        window.location = `us_batteryoffer.html?orderId=${filterXSS(MediaStorage.orderId)}&pId=${filterXSS(orderDetails.productId)}`;
       } else {
         $('#checkoutForm .btn-complete').removeClass('pulse');
         let responseMessage = resp.message;
@@ -127,7 +127,7 @@
     }
 
     CheckoutFields.forEach((field) => {
-      if ($('[name=\'' + filterXSS(field) + '\'].required').parents('.form-group').hasClass('has-success')) { icfCount += 1; }
+      if ($(`[name='${filterXSS(field)}'].required`).parents('.form-group').hasClass('has-success')) { icfCount += 1; }
     });
 
     if (invalidFieldsCount === 0) {
