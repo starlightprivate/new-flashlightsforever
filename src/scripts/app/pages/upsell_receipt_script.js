@@ -32,7 +32,7 @@
         if (resp.data) {
           const firstRow = resp.data[0];
           if (firstRow && firstRow.merchant) {
-            $('#ccIdentity').text('&lt;br&gt;' + filterXSS(firstRow.merchant));
+            $('#ccIdentity').text(`&lt;br&gt;${filterXSS(firstRow.merchant)}`);
           } else {
             $('#ccIdentity').text('&lt;br&gt;Tactical Mastery');
           }
@@ -45,7 +45,7 @@
       if (resp.success) {
         populateThanksPage(resp.data);
       } else if (resp.message) {
-        console.log('Error: ' + filterXSS(resp.message));
+        console.log(`Error: ${filterXSS(resp.message)}`);
         // window.location = GlobalConfig.BasePagePath + "index.html";
         window.location = 'index.html';
       }
@@ -55,7 +55,7 @@
           // they can be on an upsell page up to an hour after the initial sale
         let doThatPop = true;
         if (pageType === 'upsell') {
-          const gmtStr = filterXSS(resp.message.data[0].dateUpdated) + ' GMT-0400';
+          const gmtStr = `${filterXSS(resp.message.data[0].dateUpdated)} GMT-0400`;
           const orderDate = new Date(gmtStr);
           const nowDate = new Date();
           const minutesSince = (nowDate - orderDate) / 1000 / 60;
