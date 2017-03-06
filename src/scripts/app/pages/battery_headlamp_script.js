@@ -58,7 +58,7 @@
               //   }
               // }
               // Better way
-              const messages = Object.values(json.message).map((k, i) => filterXSS(i) + ':' + filterXSS(k) + '&lt;br&gt;');
+              const messages = Object.keys(json.message).map(key => `${filterXSS(key)}:${filterXSS(json.message[key])}&lt;br&gt;`);
               messageOut = messages.join('');
             }
             bootstrapModal(messageOut, 'Problem with your Addon');
