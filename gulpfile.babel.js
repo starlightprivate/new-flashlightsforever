@@ -1,5 +1,3 @@
-/* jshint node: true */
-
 "use strict";
 
 var _         = require('lodash'),
@@ -7,7 +5,6 @@ var _         = require('lodash'),
   babel       = require("gulp-babel"),
   sass        = require("gulp-sass"),
   cleanCSS    = require("gulp-clean-css"),
-  jshint      = require("gulp-jshint"),
   uglify      = require("gulp-uglify"),
   rename      = require("gulp-rename"),
   del         = require("del"),
@@ -48,19 +45,6 @@ gulp.task('lint', () => {
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
-
-// Stylish reporter for JSHint
-gulp.task('jshint', () =>
-    gulp.src([
-          "src/scripts/app/pages/*.js",
-           "src/scripts/app/config.js" ,
-           "src/scripts/app/utils.js" ,
-           "src/scripts/app/storage-wrapper.js" ,
-           "src/scripts/vendor/addclear.js",
-        ])
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
-);
 
 // Fonts
 gulp.task("fonts", function() {
@@ -192,7 +176,6 @@ gulp.task("xsslint", function() {
 // Build Task !
 gulp.task("build", ["clean-all"], function(done) {
   runSequence(
-    // "jshint",
     "xsslint",
     "libcopy",
     "transpile-and-jscopy",
