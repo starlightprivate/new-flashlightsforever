@@ -84,14 +84,14 @@
         $('#checkoutForm .btn-complete').removeClass('pulse');
         if (resp.orderId) {
           try {
-            localStorage.setItem('orderId', resp.orderId);
+            localStorage.setItem('orderId', filterXSS(resp.orderId));
           } catch (e) {
             console.log('Your browser does not support local storage.');
           }
         }
         // window.location = GlobalConfig.BasePagePath + "us_batteryoffer.html?orderId="
         // + MediaStorage.orderId + "&pId=" + orderDetails.productId;
-        window.location = `us_batteryoffer.html?orderId=${MediaStorage.orderId}&pId=${orderDetails.productId}`;
+        window.location = 'us_batteryoffer.html?orderId=' + filterXSS(MediaStorage.orderId) + '&pId=' + filterXSS(orderDetails.productId);
       } else {
         $('#checkoutForm .btn-complete').removeClass('pulse');
         let responseMessage = resp.message;
@@ -145,7 +145,7 @@
     }
 
     CheckoutFields.forEach((field) => {
-      if ($(`[name='${field}'].required`).parents('.form-group').hasClass('has-success')) { icfCount += 1; }
+      if ($('[name=\'' + filterXSS(field) + '\'].required').parents('.form-group').hasClass('has-success')) { icfCount += 1; }
     });
 
     if (invalidFieldsCount === 0) {
@@ -174,7 +174,7 @@
                     .insertAfter($field)
                     .hide();
             // Retrieve the valid message via getOptions()
-      const message = bv.getOptions(field).validMessage;
+      const message = filterXSS(bv.getOptions(field).validMessage);
       if (message) {
         $span.text(message);
       }
@@ -434,7 +434,7 @@
     })
     .on('err.field.fv', (e, data) => {
       const field = data.field;
-      const $field = data.element;
+      const $field = filterXSS(data.element);
       $field.next(`.validMessage[data-field='${field}']`).hide();
       const invalidFieldsCount = data.fv.getInvalidFields().length;
       checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount);
@@ -443,7 +443,7 @@
       data.fv.disableSubmitButtons(false);
     })
     .on('success.field.fv', (e, data) => {
-      const field = data.field;
+      const field = filterXSS(data.field);
       const $field = data.element;
       if (data.fv.getSubmitButton()) {
         data.fv.disableSubmitButtons(false);
@@ -479,24 +479,26 @@
     ];
         // Load cached values
     $.each(checkoutFields, (index, value) => {
-      if ($(`[name=${value}]`).length === 0) {
+      const tempValue = filterXSS(value);
+      if ($(`[name=${tempValue}]`).length === 0) {
         return;
       }
-      const uVal = MediaStorage[value];
+      const uVal = filterXSS(MediaStorage[value]);
       if (uVal && uVal !== null && uVal !== 'null') {
-        $(`[name=${value}]`).val(uVal);
-        $(`[name=${value}]`).data('previousValue', uVal);
+        $(`[name=${tempValue}]`).val(uVal);
+        $(`[name=${tempValue}]`).data('previousValue', uVal);
         $('#checkoutForm').formValidation('revalidateField', value);
       }
     });
         // Save Checkout Page details to DB engine
     const saveToMediaStorage = () => {
       $.each(checkoutFields, (index, value) => {
-        if (value !== 'cardNumber' && value !== 'year' && value !== 'month') {
-          if ($(`[name=${value}]`).length > 0) {
-            const uVal = $(`[name=${value}]`).val();
+        const tempValue = filterXSS(value);
+        if (tempValue !== 'cardNumber' && tempValue !== 'year' && tempValue !== 'month') {
+          if ($(`[name=${tempValue}]`).length > 0) {
+            const uVal = filterXSS($(`[name=${tempValue}]`).val());
             try {
-              localStorage.setItem(value, uVal);
+              localStorage.setItem(tempValue, uVal);
             } catch (e) {
               console.log('Your browser does not support local storage.');
             }
