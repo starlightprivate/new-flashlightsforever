@@ -55,6 +55,7 @@ gulp.task('jshint', () =>
           "src/scripts/app/pages/*.js",
            "src/scripts/app/config.js" ,
            "src/scripts/app/utils.js" ,
+           "src/scripts/app/storage-wrapper.js" ,
            "src/scripts/vendor/addclear.js",
         ])
         .pipe(jshint())
@@ -98,6 +99,7 @@ gulp.task("transpile-and-jscopy", function() {
   return gulp.src(["src/scripts/app/pages/*.js",
                    "src/scripts/app/config.js" ,
                    "src/scripts/app/utils.js" ,
+                   "src/scripts/app/storage-wrapper.js" ,
                    "src/scripts/libs/xss.js" ,
                    "src/scripts/vendor/addclear.js",
                    "src/scripts/vendor/xss.js",
@@ -144,6 +146,7 @@ gulp.task("csspurify", function() {
         [
           "src/scripts/app/config.js",
           "src/scripts/app/utils.js",
+          "src/scripts/app/storage-wrapper.js",
           "src/scripts/app/pages/*.js",
           "src/html/*.html"
         ]

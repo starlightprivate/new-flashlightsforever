@@ -10,7 +10,7 @@
     // Not an upsell page
     return;
   }
-  const MediaStorage = getOrderData();
+  const MediaStorage = UniversalStorage.getCheckoutDetails();
   if (typeof MediaStorage.orderId === 'undefined') {
     window.location = 'index.html';
   }
