@@ -4,6 +4,7 @@
   "description": "Tactical Mastery Flashlights",
   "homepage": "",
   "scripts": {
+    "precommit": "gulp lint",
     "build": "gulp build",
     "test": "snyk test && gulp xsslint",
     "dev": "gulp",
@@ -42,6 +43,7 @@
     "gulp-size": "^2.1.0",
     "gulp-strip-css-comments": "^1.2.0",
     "gulp-uglify": "^2.0.0",
+    "husky": "^0.13.2",
     "jshint": "^2.9.4",
     "run-sequence": "^1.2.2",
     "serve-static": "^1.11.2",
