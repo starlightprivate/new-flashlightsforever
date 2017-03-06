@@ -1,5 +1,5 @@
 function initFieldFv(e, data) {
-  const field = data.field;
+  const field = filterXSS(data.field);
   const $field = data.element;
   const bv = data.fv;
 
@@ -10,18 +10,18 @@ function initFieldFv(e, data) {
     .insertAfter($field)
     .hide();
   // Retrieve the valid message via getOptions()
-  const message = bv.getOptions(field).validMessage;
+  const message = filterXSS(bv.getOptions(field).validMessage);
   if (message) {
     $span.text(message);
   }
 }
 function successFieldFv(e, data) {
-  const field = data.field;
+  const field = filterXSS(data.field);
   const $field = data.element;
   $field.next(`.validMessage[data-field='${field}']`).show();
 }
 function errFieldFv(e, data) {
-  const field = data.field;
+  const field = filterXSS(data.field);
   const $field = data.element;
   $field.next(`.validMessage[data-field='${field}']`).hide();
 }
@@ -47,8 +47,8 @@ function wistiaVideo() {  // eslint-disable-line no-unused-vars
     callAPI('create-lead', crmLead, 'POST', (resp) => {
       if (resp.success) {
         if (resp.orderId) {
-          MediaStorage.orderId = resp.orderId;
-          UniversalStorage.saveOrderId(resp.orderId);
+          MediaStorage.orderId = filterXSS(resp.orderId);
+          UniversalStorage.saveOrderId(filterXSS(resp.orderId));
         }
       }
       callback(resp.success);
