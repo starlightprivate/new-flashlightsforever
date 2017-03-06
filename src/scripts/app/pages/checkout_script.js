@@ -415,8 +415,8 @@
       }
     })
     .on('err.field.fv', (e, data) => {
-      const field = data.field;
-      const $field = filterXSS(data.element);
+      const field = filterXSS(data.field);
+      const $field = data.element;
       $field.next(`.validMessage[data-field='${field}']`).hide();
       const invalidFieldsCount = data.fv.getInvalidFields().length;
       checkoutButtonPulse(CheckoutFieldsReq, invalidFieldsCount);
