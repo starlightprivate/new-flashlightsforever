@@ -73,9 +73,9 @@
   }
   function doUpsellNo(sellID) {
     $('div#js-div-loading-bar').show();
-    let nextPage = `receipt.html?orderId=${MediaStorage.orderId}`;
+    let nextPage = `receipt.html?orderId=${filterXSS(MediaStorage.orderId)}`;
     if (sellID === 'battery') {
-      nextPage = `us_headlampoffer.html?orderId=${MediaStorage.orderId}`;
+      nextPage = `us_headlampoffer.html?orderId=${filterXSS(MediaStorage.orderId)}`;
     }
     window.location = nextPage;
   }
