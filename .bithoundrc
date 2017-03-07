@@ -1,11 +1,15 @@
 {
-  "ignore": [
-    "node_modules/**",
-    "src/scripts/lib/**",
-    "safe-regex-shell.js",
-    "gulpfile.babel.js",
-  ],
-  "critics": {
-    "lint": {"engine": "eslint"}
-  }
+	"ignore": [
+		"**/deps/**",
+		"**/node_modules/**",
+		"**/src/scripts/lib/**",
+		"**/gulpfile.babel.js**",
+		"**/safe-regex-shell.js**",
+		"**/eslint-rules/**"
+	],
+	"critics": {
+		"lint": {
+			"engine": "eslint"
+		}
+	}
 }
