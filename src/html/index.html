@@ -187,7 +187,7 @@
 
         <div class="button-block">
           <div
-            class="btn btn-primary btn-green btn-buy-modal"
+            class="btn btn-primary btn-green"
             data-toggle="modal"
             data-target="#modal-contact">
             <span class="btn-title">Yes! I want 75% Off!</span>
@@ -198,7 +198,7 @@
             <span class="btn-title">EASY 24/7 USA PHONE SALES</span>
             <span class="btn-text">CLICK TO CALL</span>
           </a>
-          <button class="btn-address-modal hide-element" data-toggle="modal" data-target="#modal-address"></button>
+          <button class="hide-element" data-toggle="modal" data-target="#modal-address"></button>
         </div>
 
         <div class="function">
@@ -523,10 +523,10 @@
         onReady: function (video) {
           video.bind('secondchange', function (s) {
             $('.has-url span').html("Click Here");
-            $('.has-url').attr("href", "javascript:wistiaVideo();");
+            $('.has-url').attr("href", "javascript:openContactModal();");
           });
           video.bind('end', function () {
-            wistiaVideo();
+            openContactModal();
           });
         }
       });

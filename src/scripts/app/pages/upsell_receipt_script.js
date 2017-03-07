@@ -22,12 +22,13 @@
   }
   function populateThanksPage(orderInfos) {
     let orderInfo = orderInfos;
-
     if ($.type(orderInfos) === 'array') {
       orderInfo = orderInfos[0];
     }
-    $('#orderNumber').text(filterXSS(orderInfo.orderId));
-    callAPI('get-trans', orderInfo.orderId, 'GET', (resp) => {
+
+    const orderId = filterXSS(orderInfo.orderId);
+    $('#orderNumber').text(orderId);
+    callAPI('get-trans', orderId, 'GET', (resp) => {
       if (resp.success) {
         if (resp.data) {
           const firstRow = resp.data[0];
@@ -40,12 +41,11 @@
       }
     });
   }
-  callAPI('get-lead', myOrderID, 'GET', (resp) => {
+  callAPI('get-lead', filterXSS(myOrderID), 'GET', (resp) => {
     if (pageType === 'receipt') {
       if (resp.success) {
         populateThanksPage(resp.data);
       } else if (resp.message) {
-        console.log(`Error: ${filterXSS(resp.message)}`);
         // window.location = GlobalConfig.BasePagePath + "index.html";
         window.location = 'index.html';
       }
