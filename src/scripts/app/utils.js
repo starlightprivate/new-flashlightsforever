@@ -23,7 +23,6 @@ function isValidJson(str) {
   return true;
 }
 
-
 function getJson(e) { // eslint-disable-line no-unused-vars
   let json = {};
   if (isJsonObj(e)) {
@@ -154,19 +153,11 @@ function custcareModal(e) { // eslint-disable-line no-unused-vars
 }
 
 function getQueryVariable(variable) {
-  // for (let i = 0; i < window.location.search.substring(1).split('&').length; i + 1) {
-  //   const pair = window.location.search.substring(1).split('&')[i].split('=');
-  //   if (pair[0] === variable) {
-  //     console.log('url check-------->', pair);
-  //     return pair[1];
-  //   }
-  // }
   window.location.search.substring(1)
   .split('&')
   .forEach((value) => {
     const pair = value.split('=');
     if (pair[0] === variable) {
-      console.log('url check-------->', pair);
       return pair[1];
     }
     return '';
