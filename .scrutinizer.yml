@@ -1,0 +1,13 @@
+checks:
+  javascript: true
+filter:
+  excluded_paths:
+    - node_modules/*
+    - eslint-rules/*
+    - src/scripts/libs/*
+    - gulpfile.babel.js
+    - safe-regex-shell.js
+build:
+  tests:
+    override:
+      - eslint-run "src/scripts/app/**/*.js"
