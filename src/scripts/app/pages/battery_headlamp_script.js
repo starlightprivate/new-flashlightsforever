@@ -2,7 +2,6 @@
   let upsellID = null;
   if (window.location.pathname.indexOf('us_batteryoffer') >= 0) {
     upsellID = 'battery';
-    window.myProductId = afGet('pId', 'pId');
   } else if (window.location.pathname.indexOf('us_headlampoffer') >= 0) {
     upsellID = 'headlamp';
   }

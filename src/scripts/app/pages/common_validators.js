@@ -1,6 +1,7 @@
 function validate() {
   // Look for ios devices and safari
-  if (isMobileSafari()) {
+  const isMobileSafari = window.navigator.userAgent.match(/(iPod|iPhone|iPad)/) && window.navigator.userAgent.match(/AppleWebKit/);
+  if (isMobileSafari) {
     // Search for credit card input and change it to text field
     if ($('input#creditcard').length > 0) {
       $('input#creditcard').attr('type', 'text');
