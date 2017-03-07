@@ -16,7 +16,8 @@
   }
   // Upsell functions
   function doUpsellYes(sellID, productId) {
-    $('div#js-div-loading-bar').show();
+    const $loadingBar = $('div#js-div-loading-bar');
+    $loadingBar.show();
     const usParams = {};
     let productIdForUserParams = {};
     if (MediaStorage.orderId) {
@@ -47,28 +48,21 @@
             if (typeof json.message === 'string') {
               messageOut = json.message;
               if (messageOut === 'This upsale was already taken.') {
-                  // continue down the funnel if the upsell is done
                 window.location = nextPage;
                 return;
               }
             } else {
-              // for (const k in json.message) {
-              //   if (json.message.hasOwnProperty(k)) {
-              //     messageOut += `${k}:${json.message[k]}&lt;br&gt;`;
-              //   }
-              // }
-              // Better way
               const messages = Object.keys(json.message).map(key => `${filterXSS(key)}:${filterXSS(json.message[key])}&lt;br&gt;`);
               messageOut = messages.join('');
             }
-            bootstrapModal(messageOut, 'Problem with your Addon');
+            bootstrapModal(filterXSS(messageOut), 'Problem with your Addon');
           }
-          $('div#js-div-loading-bar').hide();
+          $loadingBar.hide();
         });
       }
     } else {
       bootstrapModal('There was an error finding your order, please refresh the page and try again.', 'Error');
-      $('div#js-div-loading-bar').hide();
+      $loadingBar.hide();
     }
   }
   function doUpsellNo(sellID) {
@@ -83,6 +77,6 @@
     doUpsellNo(upsellID);
   });
   $('.doupsellyes').click(() => {
-    doUpsellYes(upsellID, $(this).data('productid'));
+    doUpsellYes(upsellID, filterXSS($(this).data('productid')));
   });
 })();
