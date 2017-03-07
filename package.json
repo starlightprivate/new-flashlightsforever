@@ -4,13 +4,13 @@
   "description": "Tactical Mastery Flashlights",
   "homepage": "",
   "scripts": {
-    "precommit": "gulp lint && npm run lint",
+    "precommit": "npm run lint",
     "build": "gulp build",
     "test": "snyk test && gulp xsslint",
     "dev": "gulp",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
-    "lint": "node_modules/.bin/htmlhint --config .htmlhintrc src/html/*.html"
+    "lint": "gulp lint &&  node_modules/.bin/htmlhint --config .htmlhintrc src/html/*.html"
   },
   "dependencies": {
     "gulp-eslint": "^3.0.1",
